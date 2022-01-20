@@ -65,7 +65,7 @@ public:
         DisplayActions,
         ShareableRole,
         IsCurrentUserFileActivityRole,
-        PreviewsRole,
+        ThumbnailRole
     };
     Q_ENUM(DataRole)
 

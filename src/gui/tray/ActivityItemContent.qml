@@ -28,24 +28,24 @@ RowLayout {
         Layout.preferredHeight: shareButton.icon.height * 2
 
         Image {
-            id: previewIcon
+            id: thumbnailImage
             width: parent.width * 0.66
             height: parent.height * 0.66
             anchors.centerIn: parent
             cache: true
-            source: if(model.previews !== undefined) "image://activity-item-icon/" + previews[0].source
-            visible: model.previews !== undefined && model.previews.length > 0
+            source: model.thumbnail.source
+            visible: model.thumbnail !== undefined
             sourceSize.height: 64
             sourceSize.width: 64
         }
 
         Image {
             id: activityIcon
-            width: previewIcon.visible ? parent.width * 0.5 : parent.width * 0.8
-            height: previewIcon.visible ? parent.height * 0.5 : parent.height * 0.8
-            anchors.centerIn: if(!previewIcon.visible) parent
-            anchors.right: if(previewIcon.visible) parent.right
-            anchors.bottom: if(previewIcon.visible) parent.bottom
+            width: thumbnailImage.visible ? parent.width * 0.5 : parent.width * 0.8
+            height: thumbnailImage.visible ? parent.height * 0.5 : parent.height * 0.8
+            anchors.centerIn: if(!thumbnailImage.visible) parent
+            anchors.right: if(thumbnailImage.visible) parent.right
+            anchors.bottom: if(thumbnailImage.visible) parent.bottom
             cache: true
             source: icon
             sourceSize.height: 64

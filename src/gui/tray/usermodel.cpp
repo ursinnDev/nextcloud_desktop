@@ -16,6 +16,7 @@
 #include "tray/notificationcache.h"
 #include "tray/unifiedsearchresultslistmodel.h"
 #include "userstatusconnector.h"
+#include "thumbnailjob.h"
 
 #include <QDesktopServices>
 #include <QIcon>
@@ -532,6 +533,13 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
             activity._message = tr("You created %1").arg(fileName);
         } else {
             activity._message = tr("You changed %1").arg(fileName);
+        }
+
+        if(activity._fileAction != "file_deleted") {
+            auto remotePath = folder->remotePath() + activity._file;
+            PreviewData preview;
+            preview._source = account()->url().toString() + QLatin1String("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
+            activity._previews.append(preview);
         }
 
         _activityModel->addSyncFileItemToActivityList(activity);
