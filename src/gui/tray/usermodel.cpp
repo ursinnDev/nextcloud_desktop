@@ -536,7 +536,8 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
         }
 
         if(activity._fileAction != "file_deleted") {
-            auto remotePath = folder->remotePath() + activity._file;
+            auto remotePath = folder->remotePath();
+            remotePath.append(activity._fileAction == "file_renamed" ? item->_renameTarget : activity._file);
             PreviewData preview;
             preview._source = account()->url().toString() + QLatin1String("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
             activity._previews.append(preview);
