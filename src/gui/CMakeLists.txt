@@ -129,6 +129,8 @@ set(client_SRCS
     tray/syncstatussummary.cpp
     tray/activitydata.cpp
     tray/activitylistmodel.cpp
+    tray/activityitemimageprovider.cpp
+    tray/asyncimageresponse.cpp
     tray/unifiedsearchresult.cpp
     tray/unifiedsearchresultimageprovider.cpp
     tray/unifiedsearchresultslistmodel.cpp

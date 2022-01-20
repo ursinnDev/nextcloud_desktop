@@ -73,6 +73,7 @@ QHash<int, QByteArray> ActivityListModel::roleNames() const
     roles[DisplayActions] = "displayActions";
     roles[ShareableRole] = "isShareable";
     roles[IsCurrentUserFileActivityRole] = "isCurrentUserFileActivity";
+    roles[PreviewsRole] = "previews";
     return roles;
 }
 
@@ -221,11 +222,14 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
             } else {
                 // File sync successful
                 if (a._fileAction == "file_created") {
-                    return "qrc:///client/theme/colored/add.svg";
+                    return a._previews.count() <= 0 ? "qrc:///client/theme/colored/add.svg"
+                                                    : "qrc:///client/theme/colored/add-bordered.svg";
                 } else if (a._fileAction == "file_deleted") {
-                    return "qrc:///client/theme/colored/delete.svg";
+                    return a._previews.count() <= 0 ? "qrc:///client/theme/colored/delete.svg"
+                                                    : "qrc:///client/theme/colored/delete-bordered.svg";
                 } else {
-                    return "qrc:///client/theme/change.svg";
+                    return a._previews.count() <= 0 ? "qrc:///client/theme/change.svg"
+                                                    : "qrc:///client/theme/colored/change-bordered.svg";
                 }
             }
         } else {
@@ -283,6 +287,25 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
         return !data(index, PathRole).toString().isEmpty() && a._objectType == QStringLiteral("files") && _displayActions && a._fileAction != "file_deleted" && a._status != SyncFileItem::FileIgnored;
     case IsCurrentUserFileActivityRole:
         return a._isCurrentUserFileActivity;
+    case PreviewsRole: {
+        if(a._previews.count() <= 0) {
+            return {};
+        }
+
+        QVariantList variantedPreviews;
+        for(const auto &preview : a._previews) {
+            variantedPreviews.append(QVariantMap {
+                {QStringLiteral("source"), preview._source},
+                {QStringLiteral("link"), preview._link},
+                {QStringLiteral("mimeType"), preview._mimeType},
+                {QStringLiteral("fileId"), preview._fileId},
+                {QStringLiteral("view"), preview._view},
+                {QStringLiteral("isMimeTypeIcon"), preview._isMimeTypeIcon},
+                {QStringLiteral("filename"), preview._filename},
+            });
+        }
+        return variantedPreviews;
+    }
     default:
         return QVariant();
     }
@@ -321,6 +344,7 @@ void ActivityListModel::startFetchJob()
         this, &ActivityListModel::activitiesReceived);
 
     QUrlQuery params;
+    params.addQueryItem(QLatin1String("previews"), QLatin1String("true"));
     params.addQueryItem(QLatin1String("since"), QString::number(_currentItem));
     params.addQueryItem(QLatin1String("limit"), QString::number(50));
     job->addQueryParams(params);
@@ -416,6 +440,32 @@ void ActivityListModel::activitiesReceived(const QJsonDocument &json, int status
             }
 
             a._subjectDisplay = displayString;
+        }
+
+        const auto previewsData = json.value(QStringLiteral("previews")).toArray();
+        if(previewsData.size() > 0) {
+            for(const auto preview : previewsData) {
+                const auto jsonPreviewData = preview.toObject();
+
+                PreviewData data;
+                data._source = jsonPreviewData.value(QStringLiteral("source")).toString();
+                data._link = jsonPreviewData.value(QStringLiteral("link")).toString();
+                data._mimeType = jsonPreviewData.value(QStringLiteral("mimeType")).toString();
+                data._fileId = jsonPreviewData.value(QStringLiteral("fileId")).toInt();
+                data._view = jsonPreviewData.value(QStringLiteral("view")).toString();
+                data._isMimeTypeIcon = jsonPreviewData.value(QStringLiteral("isMimeTypeIcon")).toBool();
+                data._filename = jsonPreviewData.value(QStringLiteral("filename")).toString();
+
+                a._previews.append(data);
+            }
+
+            if(a._icon.contains(QStringLiteral("add-color.svg"))) {
+                a._icon = "qrc:///client/theme/colored/add-bordered.svg";
+            } else if(a._icon.contains(QStringLiteral("delete-color.svg"))) {
+                a._icon = "qrc:///client/theme/colored/delete-bordered.svg";
+            } else if(a._icon.contains(QStringLiteral("change.svg"))) {
+                a._icon = "qrc:///client/theme/colored/change-bordered.svg";
+            }
         }
 
         list.append(a);

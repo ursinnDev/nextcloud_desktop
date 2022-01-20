@@ -21,17 +21,36 @@ RowLayout {
 
     spacing: 10
 
-    Image {
-        id: activityIcon
-
+    Item {
         Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-        Layout.preferredWidth: 32
-        Layout.preferredHeight: 32
+        Layout.leftMargin: 5
+        Layout.preferredWidth: shareButton.icon.width * 2
+        Layout.preferredHeight: shareButton.icon.height * 2
 
-        verticalAlignment: Qt.AlignCenter
-        source: icon
-        sourceSize.height: 64
-        sourceSize.width: 64
+        Image {
+            id: previewIcon
+            width: parent.width * 0.66
+            height: parent.height * 0.66
+            anchors.centerIn: parent
+            cache: true
+            source: if(model.previews !== undefined) "image://activity-item-icon/" + previews[0].source
+            visible: model.previews !== undefined && model.previews.length > 0
+            sourceSize.height: 64
+            sourceSize.width: 64
+        }
+
+        Image {
+            id: activityIcon
+            width: previewIcon.visible ? parent.width * 0.5 : parent.width * 0.8
+            height: previewIcon.visible ? parent.height * 0.5 : parent.height * 0.8
+            anchors.centerIn: if(!previewIcon.visible) parent
+            anchors.right: if(previewIcon.visible) parent.right
+            anchors.bottom: if(previewIcon.visible) parent.bottom
+            cache: true
+            source: icon
+            sourceSize.height: 64
+            sourceSize.width: 64
+        }
     }
 
     Column {

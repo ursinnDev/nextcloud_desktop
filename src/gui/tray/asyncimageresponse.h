@@ -12,14 +12,26 @@
  * for more details.
  */
 
-#include "unifiedsearchresultimageprovider.h"
-#include "asyncimageresponse.h"
+#pragma once
 
-namespace OCC {
+#include <QImage>
+#include <QQuickImageProvider>
 
-QQuickImageResponse *UnifiedSearchResultImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize)
+class AsyncImageResponse : public QQuickImageResponse
 {
-    return new AsyncImageResponse(id, requestedSize);
-}
+public:
+    AsyncImageResponse(const QString &id, const QSize &requestedSize);
+    void setImageAndEmitFinished(const QImage &image = {});
+    QQuickTextureFactory *textureFactory() const override;
 
-}
+private:
+    void processNextImage();
+
+private slots:
+    void slotProcessNetworkReply();
+
+    QImage _image;
+    QStringList _imagePaths;
+    QSize _requestedImageSize;
+    int _index = 0;
+};

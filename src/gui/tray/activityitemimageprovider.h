@@ -1,5 +1,5 @@
 /*
- * Copyright (C) by Oleksandr Zolotov <alex@nextcloud.com>
+ * Copyright (C) by Claudio Cambra <claudio.cambra@nextcloud.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,14 +12,22 @@
  * for more details.
  */
 
-#include "unifiedsearchresultimageprovider.h"
-#include "asyncimageresponse.h"
+#pragma once
+
+#include <QtCore>
+#include <QQuickImageProvider>
 
 namespace OCC {
 
-QQuickImageResponse *UnifiedSearchResultImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize)
-{
-    return new AsyncImageResponse(id, requestedSize);
-}
+/**
+ * @brief The ActivityItemImageProvider
+ * @ingroup gui
+ * Allows for the fetching of icons for activity items from the server
+ */
 
+class ActivityItemImageProvider : public QQuickAsyncImageProvider
+{
+public:
+    QQuickImageResponse *requestImageResponse(const QString &id, const QSize &requestedSize) override;
+};
 }

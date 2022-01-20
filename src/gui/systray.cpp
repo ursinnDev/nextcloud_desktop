@@ -21,6 +21,7 @@
 #include "tray/usermodel.h"
 #include "wheelhandler.h"
 #include "tray/unifiedsearchresultimageprovider.h"
+#include "tray/activityitemimageprovider.h"
 #include "configfile.h"
 #include "accessmanager.h"
 
@@ -66,6 +67,7 @@ void Systray::setTrayEngine(QQmlApplicationEngine *trayEngine)
     _trayEngine->addImageProvider("avatars", new ImageProvider);
     _trayEngine->addImageProvider(QLatin1String("svgimage-custom-color"), new OCC::Ui::SvgImageProvider);
     _trayEngine->addImageProvider(QLatin1String("unified-search-result-icon"), new UnifiedSearchResultImageProvider);
+    _trayEngine->addImageProvider(QLatin1String("activity-item-icon"), new ActivityItemImageProvider);
 }
 
 Systray::Systray()
