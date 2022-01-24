@@ -496,20 +496,9 @@ bool User::isUnsolvableConflict(const SyncFileItemPtr &item) const
 
 void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr &item)
 {
-    Activity activity = Activity::fromSyncFileItemPtr(item, account(), folder);
+    const Activity activity = Activity::fromSyncFileItemPtr(item, account(), folder);
 
     const auto fileName = QFileInfo(item->_originalFile).fileName();
-
-    if (item->_instruction == CSYNC_INSTRUCTION_REMOVE) {
-        activity._fileAction = "file_deleted";
-    } else if (item->_instruction == CSYNC_INSTRUCTION_NEW) {
-        activity._fileAction = "file_created";
-    } else if (item->_instruction == CSYNC_INSTRUCTION_RENAME) {
-        activity._fileAction = "file_renamed";
-        activity._renamedFile = item->_renameTarget;
-    } else {
-        activity._fileAction = "file_changed";
-    }
 
     if (item->_status == SyncFileItem::NoStatus || item->_status == SyncFileItem::Success) {
         qCWarning(lcActivity) << "Item " << item->_file << " retrieved successfully.";
