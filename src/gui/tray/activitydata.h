@@ -95,6 +95,8 @@ public:
         SyncFileItemType
     };
 
+    static Activity fromActivityJson(QJsonObject json);
+
     struct RichSubjectParameter {
         QString type;    // Required
         QString id;      // Required
