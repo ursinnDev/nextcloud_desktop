@@ -496,16 +496,7 @@ bool User::isUnsolvableConflict(const SyncFileItemPtr &item) const
 
 void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr &item)
 {
-    Activity activity;
-    activity._type = Activity::SyncFileItemType; //client activity
-    activity._status = item->_status;
-    activity._dateTime = QDateTime::currentDateTime();
-    activity._message = item->_originalFile;
-    activity._link = folder->accountState()->account()->url();
-    activity._accName = folder->accountState()->account()->displayName();
-    activity._file = item->_file;
-    activity._folder = folder->alias();
-    activity._fileAction = "";
+    Activity activity = Activity::fromSyncFileItemPtr(item, account(), folder);
 
     const auto fileName = QFileInfo(item->_originalFile).fileName();
 
@@ -522,31 +513,10 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
 
     if (item->_status == SyncFileItem::NoStatus || item->_status == SyncFileItem::Success) {
         qCWarning(lcActivity) << "Item " << item->_file << " retrieved successfully.";
-
-        if (item->_direction != SyncFileItem::Up) {
-            activity._message = tr("Synced %1").arg(fileName);
-        } else if (activity._fileAction == "file_renamed") {
-            activity._message = tr("You renamed %1").arg(fileName);
-        } else if (activity._fileAction == "file_deleted") {
-            activity._message = tr("You deleted %1").arg(fileName);
-        } else if (activity._fileAction == "file_created") {
-            activity._message = tr("You created %1").arg(fileName);
-        } else {
-            activity._message = tr("You changed %1").arg(fileName);
-        }
-
-        if(activity._fileAction != "file_deleted") {
-            auto remotePath = folder->remotePath();
-            remotePath.append(activity._fileAction == "file_renamed" ? item->_renameTarget : activity._file);
-            PreviewData preview;
-            preview._source = account()->url().toString() + QLatin1String("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
-            activity._previews.append(preview);
-        }
-
         _activityModel->addSyncFileItemToActivityList(activity);
+
     } else {
         qCWarning(lcActivity) << "Item " << item->_file << " retrieved resulted in error " << item->_errorString;
-        activity._subject = item->_errorString;
 
         if (item->_status == SyncFileItem::Status::FileIgnored) {
             _activityModel->addIgnoredFileToList(activity);

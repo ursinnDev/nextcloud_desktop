@@ -377,13 +377,12 @@ void ActivityListModel::ingestActivities(const QJsonArray activities)
     QDateTime oldestDate = QDateTime::currentDateTime();
     oldestDate = oldestDate.addDays(_maxActivitiesDays * -1);
 
-    for (auto activ : activities) {
+    for (const auto activ : activities) {
         auto json = activ.toObject();
 
         const auto activityUser = json.value(QStringLiteral("user")).toString();
 
-        Activity a = Activity::fromActivityJson(json);
-        a._accName = _accountState->account()->displayName();
+        Activity a = Activity::fromActivityJson(json, _accountState->account()->displayName());
         a._isCurrentUserFileActivity = a._objectType == QStringLiteral("files") && activityUser == _accountState->account()->davUser();
 
         list.append(a);
@@ -403,7 +402,7 @@ void ActivityListModel::ingestActivities(const QJsonArray activities)
 
 void ActivityListModel::activitiesReceived(const QJsonDocument &json, int statusCode)
 {
-    auto activities = json.object().value("ocs").toObject().value("data").toArray();
+    const auto activities = json.object().value("ocs").toObject().value("data").toArray();
 
     auto ast = _accountState;
     if (!ast) {
