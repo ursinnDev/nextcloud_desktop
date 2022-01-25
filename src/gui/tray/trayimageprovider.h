@@ -1,5 +1,5 @@
 /*
- * Copyright (C) by Claudio Cambra <claudio.cambra@nextcloud.com>
+ * Copyright (C) by Oleksandr Zolotov <alex@nextcloud.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,16 +12,22 @@
  * for more details.
  */
 
-#include "activityitemimageprovider.h"
-#include "asyncimageresponse.h"
+#pragma once
 
+#include <QtCore>
+#include <QQuickImageProvider>
 
 namespace OCC {
 
-QQuickImageResponse *ActivityItemImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize)
+/**
+ * @brief The TrayImageProvider
+ * @ingroup gui
+ * Allows to fetch icon from the server or used a local resource
+ */
+
+class TrayImageProvider : public QQuickAsyncImageProvider
 {
-    return new AsyncImageResponse(id, requestedSize);
+public:
+    QQuickImageResponse *requestImageResponse(const QString &id, const QSize &requestedSize) override;
+};
 }
-
-}
-

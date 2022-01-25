@@ -12,22 +12,14 @@
  * for more details.
  */
 
-#pragma once
-
-#include <QtCore>
-#include <QQuickImageProvider>
+#include "trayimageprovider.h"
+#include "asyncimageresponse.h"
 
 namespace OCC {
 
-/**
- * @brief The UnifiedSearchResultImageProvider
- * @ingroup gui
- * Allows to fetch Unified Search result icon from the server or used a local resource
- */
-
-class UnifiedSearchResultImageProvider : public QQuickAsyncImageProvider
+QQuickImageResponse *TrayImageProvider::requestImageResponse(const QString &id, const QSize &requestedSize)
 {
-public:
-    QQuickImageResponse *requestImageResponse(const QString &id, const QSize &requestedSize) override;
-};
+    return new AsyncImageResponse(id, requestedSize);
+}
+
 }
