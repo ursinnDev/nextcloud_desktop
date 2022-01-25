@@ -99,7 +99,7 @@ public:
         SyncFileItemType
     };
 
-    static Activity fromActivityJson(const QJsonObject json, const QString accName);
+    static Activity fromActivityJson(const QJsonObject json, const AccountPtr account);
     static Activity fromSyncFileItemPtr(const SyncFileItemPtr item, const AccountPtr account, const Folder *folder);
 
     struct RichSubjectParameter {

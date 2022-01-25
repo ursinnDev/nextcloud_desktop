@@ -45,20 +45,23 @@ ActivityLink ActivityLink::createFomJsonObject(const QJsonObject &obj)
     return activityLink;
 }
 
-    OCC::Activity Activity::fromActivityJson(const QJsonObject json, const QString accName)
+    OCC::Activity Activity::fromActivityJson(const QJsonObject json, const AccountPtr account)
     {
+        const auto activityUser = json.value(QStringLiteral("user")).toString();
+
         Activity activity;
         activity._type = Activity::ActivityType;
         activity._objectType = json.value(QStringLiteral("object_type")).toString();
         activity._id = json.value(QStringLiteral("activity_id")).toInt();
         activity._fileAction = json.value(QStringLiteral("type")).toString();
-        activity._accName = accName;
+        activity._accName = account->displayName();
         activity._subject = json.value(QStringLiteral("subject")).toString();
         activity._message = json.value(QStringLiteral("message")).toString();
         activity._file = json.value(QStringLiteral("object_name")).toString();
         activity._link = QUrl(json.value(QStringLiteral("link")).toString());
         activity._dateTime = QDateTime::fromString(json.value(QStringLiteral("datetime")).toString(), Qt::ISODate);
         activity._icon = json.value(QStringLiteral("icon")).toString();
+        activity._isCurrentUserFileActivity = activity._objectType == QStringLiteral("files") && activityUser == account->davUser();
 
         auto richSubjectData = json.value(QStringLiteral("subject_rich")).toArray();
 
@@ -101,13 +104,22 @@ ActivityLink ActivityLink::createFomJsonObject(const QJsonObject &obj)
             const auto jsonPreviewData = preview.toObject();
 
             PreviewData data;
-            data._source = jsonPreviewData.value(QStringLiteral("source")).toString();
             data._link = jsonPreviewData.value(QStringLiteral("link")).toString();
             data._mimeType = jsonPreviewData.value(QStringLiteral("mimeType")).toString();
             data._fileId = jsonPreviewData.value(QStringLiteral("fileId")).toInt();
             data._view = jsonPreviewData.value(QStringLiteral("view")).toString();
-            data._isMimeTypeIcon = jsonPreviewData.value(QStringLiteral("isMimeTypeIcon")).toBool();
             data._filename = jsonPreviewData.value(QStringLiteral("filename")).toString();
+
+            if(data._mimeType.contains(QStringLiteral("text/"))) {
+                data._source = account->url().toString() + QStringLiteral("/index.php/apps/theming/img/core/filetypes/text.svg");
+                data._isMimeTypeIcon = true;
+            } else if (data._mimeType.contains(QStringLiteral("/pdf"))) {
+                data._source = account->url().toString() + QStringLiteral("/index.php/apps/theming/img/core/filetypes/application-pdf.svg");
+                data._isMimeTypeIcon = true;
+            } else {
+                data._source = jsonPreviewData.value(QStringLiteral("source")).toString();
+                data._isMimeTypeIcon = jsonPreviewData.value(QStringLiteral("isMimeTypeIcon")).toBool();
+            }
 
             activity._previews.append(data);
         }
@@ -168,7 +180,7 @@ ActivityLink ActivityLink::createFomJsonObject(const QJsonObject &obj)
                 auto remotePath = folder->remotePath();
                 remotePath.append(activity._fileAction == "file_renamed" ? item->_renameTarget : activity._file);
                 PreviewData preview;
-                preview._source = account->url().toString() + QLatin1String("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
+                preview._source = account->url().toString() + QStringLiteral("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
                 activity._previews.append(preview);
             }
 
