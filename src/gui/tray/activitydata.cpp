@@ -15,6 +15,7 @@
 #include <QtCore>
 
 #include "activitydata.h"
+#include "folderman.h"
 
 
 namespace OCC {
@@ -180,7 +181,22 @@ ActivityLink ActivityLink::createFomJsonObject(const QJsonObject &obj)
                 auto remotePath = folder->remotePath();
                 remotePath.append(activity._fileAction == "file_renamed" ? item->_renameTarget : activity._file);
                 PreviewData preview;
-                preview._source = account->url().toString() + QStringLiteral("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
+
+                QMimeType mimeType;
+
+                const auto localFiles = FolderMan::instance()->findFileInLocalFolders(item->_file, account);
+                if (!localFiles.isEmpty()) {
+                    QMimeDatabase mimeDb;
+                    mimeType = mimeDb.mimeTypeForFile(QFileInfo(localFiles.constFirst()));
+                }
+
+                if(mimeType.isValid() && mimeType.inherits("text/plain")) {
+                    preview._source = account->url().toString() + QStringLiteral("/index.php/apps/theming/img/core/filetypes/text.svg");
+                } else if (mimeType.isValid() && mimeType.inherits("application/pdf")) {
+                    preview._source = account->url().toString() + QStringLiteral("/index.php/apps/theming/img/core/filetypes/application-pdf.svg");
+                } else {
+                    preview._source = account->url().toString() + QStringLiteral("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
+                }
                 activity._previews.append(preview);
             }
 
