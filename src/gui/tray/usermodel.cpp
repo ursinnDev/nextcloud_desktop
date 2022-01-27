@@ -496,7 +496,7 @@ bool User::isUnsolvableConflict(const SyncFileItemPtr &item) const
 
 void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr &item)
 {
-    const auto fileActionFromInstruction = [](int instruction) {
+    const auto fileActionFromInstruction = [](const int instruction) {
         if (instruction == CSYNC_INSTRUCTION_REMOVE) {
             return QStringLiteral("file_deleted");
         } else if (instruction == CSYNC_INSTRUCTION_NEW) {
@@ -508,7 +508,7 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
         }
     };
 
-    const auto messageFromFileAction = [](QString fileAction, QString fileName) {
+    const auto messageFromFileAction = [](const QString fileAction, const QString fileName) {
         if (fileAction == "file_renamed") {
             return QObject::tr("You renamed %1").arg(fileName);
         } else if (fileAction == "file_deleted") {
