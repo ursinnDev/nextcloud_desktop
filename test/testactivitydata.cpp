@@ -14,8 +14,13 @@
 
 #include "gui/tray/activitydata.h"
 #include "account.h"
+#include "accountstate.h"
+#include "configfile.h"
 #include "syncenginetestutils.h"
 #include "syncfileitem.h"
+#include "folder.h"
+#include "folderman.h"
+#include "testhelper.h"
 
 #include <QTest>
 
@@ -113,8 +118,8 @@ public:
         QCOMPARE(activity._previews[0]._mimeType, mimeType);
     }
 
-    OCC::AccountPtr account;
     QScopedPointer<FakeQNAM> fakeQnam;
+    OCC::AccountPtr account;
 
 private slots:
     void initTestCase()
@@ -122,6 +127,8 @@ private slots:
         account = OCC::Account::create();
         account->setCredentials(new FakeCredentials{fakeQnam.data()});
         account->setUrl(QUrl(("http://example.de")));
+        auto *cred = new HttpCredentialsTest("testuser", "secret");
+        account->setCredentials(cred);
     }
 
     void testFromJson()

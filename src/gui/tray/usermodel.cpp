@@ -3,7 +3,7 @@
 
 #include "accountmanager.h"
 #include "owncloudgui.h"
-#include <pushnotifications.h>
+#include "pushnotifications.h"
 #include "userstatusselectormodel.h"
 #include "syncengine.h"
 #include "ocsjob.h"
@@ -496,16 +496,82 @@ bool User::isUnsolvableConflict(const SyncFileItemPtr &item) const
 
 void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr &item)
 {
-    const Activity activity = Activity::fromSyncFileItemPtr(item, account(), folder);
+    const auto fileActionFromInstruction = [](int instruction) {
+        if (instruction == CSYNC_INSTRUCTION_REMOVE) {
+            return QStringLiteral("file_deleted");
+        } else if (instruction == CSYNC_INSTRUCTION_NEW) {
+            return QStringLiteral("file_created");
+        } else if (instruction == CSYNC_INSTRUCTION_RENAME) {
+            return QStringLiteral("file_renamed");
+        } else {
+            return QStringLiteral("file_changed");
+        }
+    };
+
+    const auto messageFromFileAction = [](QString fileAction, QString fileName) {
+        if (fileAction == "file_renamed") {
+            return QObject::tr("You renamed %1").arg(fileName);
+        } else if (fileAction == "file_deleted") {
+            return QObject:: tr("You deleted %1").arg(fileName);
+        } else if (fileAction == "file_created") {
+            return QObject::tr("You created %1").arg(fileName);
+        } else {
+            return QObject::tr("You changed %1").arg(fileName);
+        }
+    };
+
+    Activity activity;
+    activity._type = Activity::SyncFileItemType; //client activity
+    activity._status = item->_status;
+    activity._dateTime = QDateTime::currentDateTime();
+    activity._message = item->_originalFile;
+    activity._link = account()->url();
+    activity._accName = account()->displayName();
+    activity._file = item->_file;
+    activity._folder = folder->alias();
+    activity._fileAction = "";
 
     const auto fileName = QFileInfo(item->_originalFile).fileName();
 
+    activity._fileAction = fileActionFromInstruction(item->_instruction);
+
     if (item->_status == SyncFileItem::NoStatus || item->_status == SyncFileItem::Success) {
         qCWarning(lcActivity) << "Item " << item->_file << " retrieved successfully.";
+
+        if (item->_direction != SyncFileItem::Up) {
+            activity._message = QObject::tr("Synced %1").arg(fileName);
+        } else {
+            activity._message = messageFromFileAction(activity._fileAction, fileName);
+        }
+
+        if(activity._fileAction != "file_deleted") {
+            auto remotePath = folder->remotePath();
+            remotePath.append(activity._fileAction == "file_renamed" ? item->_renameTarget : activity._file);
+            PreviewData preview;
+
+            QMimeType mimeType;
+
+            const auto localFiles = FolderMan::instance()->findFileInLocalFolders(item->_file, account());
+            if (!localFiles.isEmpty()) {
+                mimeType = mimeDb.mimeTypeForFile(QFileInfo(localFiles.constFirst()));
+            }
+
+            if(mimeType.isValid() && mimeType.inherits("text/plain")) {
+                preview._source = account()->url().toString() + QStringLiteral("/index.php/apps/theming/img/core/filetypes/text.svg");
+            } else if (mimeType.isValid() && mimeType.inherits("application/pdf")) {
+                preview._source = account()->url().toString() + QStringLiteral("/index.php/apps/theming/img/core/filetypes/application-pdf.svg");
+            } else {
+                preview._source = account()->url().toString() + QStringLiteral("/index.php/apps/files/api/v1/thumbnail/150/150/") + remotePath;
+            }
+            activity._previews.append(preview);
+        }
+
         _activityModel->addSyncFileItemToActivityList(activity);
 
     } else {
         qCWarning(lcActivity) << "Item " << item->_file << " retrieved resulted in error " << item->_errorString;
+
+        activity._subject = item->_errorString;
 
         if (item->_status == SyncFileItem::Status::FileIgnored) {
             _activityModel->addIgnoredFileToList(activity);
