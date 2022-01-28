@@ -305,6 +305,8 @@ signals:
 
     void userStatusChanged();
 
+    void capabilitiesChanged();
+
 protected Q_SLOTS:
     void slotCredentialsFetched();
     void slotCredentialsAsked();

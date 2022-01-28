@@ -587,6 +587,8 @@ void Account::setCapabilities(const QVariantMap &caps)
 {
     _capabilities = Capabilities(caps);
 
+    emit capabilitiesChanged();
+
     setupUserStatusConnector();
     trySetupPushNotifications();
 }

@@ -42,7 +42,7 @@ RowLayout {
             imageSource: model.modelData.imageSource
             imageSourceHover: model.modelData.imageSourceHovered
 
-            textColor: imageSource !== "" ? Style.ncBlue : Style.unifiedSearchResulSublineColor
+            textColor: imageSource !== "" ? UserModel.currentUser.serverColor : Style.unifiedSearchResulSublineColor
             textColorHovered: imageSource !== "" ? Style.lightHover : Style.unifiedSearchResulTitleColor
 
             bold: primary
