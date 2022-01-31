@@ -16,6 +16,7 @@
 #include "tray/notificationcache.h"
 #include "tray/unifiedsearchresultslistmodel.h"
 #include "userstatusconnector.h"
+#include "theme.h"
 
 #include <QDesktopServices>
 #include <QIcon>
@@ -703,7 +704,8 @@ bool User::hasActivities() const
 
 QColor User::serverColor() const
 {
-    return _account->account()->capabilities().serverColor();
+    const auto serverColor = _account->account()->capabilities().serverColor();
+    return serverColor.isValid() ? serverColor : Theme::defaultColor();
 }
 
 QColor User::serverTextColor() const

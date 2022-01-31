@@ -62,6 +62,7 @@ class OWNCLOUDSYNC_EXPORT Theme : public QObject
 #endif
     Q_PROPERTY(QString updateCheckUrl READ updateCheckUrl CONSTANT)
 
+    Q_PROPERTY(QColor defaultColor READ defaultColor CONSTANT)
     Q_PROPERTY(QColor errorBoxTextColor READ errorBoxTextColor CONSTANT)
     Q_PROPERTY(QColor errorBoxBackgroundColor READ errorBoxBackgroundColor CONSTANT)
     Q_PROPERTY(QColor errorBoxBorderColor READ errorBoxBorderColor CONSTANT)
@@ -573,6 +574,8 @@ public:
     virtual bool showVirtualFilesOption() const;
 
     virtual bool enforceVirtualFilesSyncFolder() const;
+
+    static QColor defaultColor();
 
     /** @return color for the ErrorBox text. */
     virtual QColor errorBoxTextColor() const;
