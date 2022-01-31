@@ -473,7 +473,9 @@ public:
     * (actually 2019/09/13 only systray theming).
     */
 	virtual QIcon uiThemeIcon(const QString &iconName, bool uiHasDarkBg) const;
-    
+
+    Q_INVOKABLE static float getColorDarkness(const QColor &color);
+
     /**
      * @brief Perform a calculation to check if a colour is dark or light and accounts for different sensitivity of the human eye.
      *

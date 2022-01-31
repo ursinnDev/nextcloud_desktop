@@ -25,8 +25,9 @@ class User : public QObject
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString server READ server CONSTANT)
+    Q_PROPERTY(QColor headerColor READ headerColor NOTIFY headerColorChanged)
+    Q_PROPERTY(QColor headerTextColor READ headerTextColor NOTIFY headerTextColorChanged)
     Q_PROPERTY(QColor accentColor READ accentColor NOTIFY accentColorChanged)
-    Q_PROPERTY(QColor accentContrastingTextColor READ accentContrastingTextColor NOTIFY accentContrastingTextColorChanged)
     Q_PROPERTY(bool serverHasUserStatus READ serverHasUserStatus CONSTANT)
     Q_PROPERTY(QUrl statusIcon READ statusIcon NOTIFY statusChanged)
     Q_PROPERTY(QString statusEmoji READ statusEmoji NOTIFY statusChanged)
@@ -58,7 +59,8 @@ public:
     AccountApp *talkApp() const;
     bool hasActivities() const;
     QColor accentColor() const;
-    QColor accentContrastingTextColor() const;
+    QColor headerColor() const;
+    QColor headerTextColor() const;
     AccountAppList appList() const;
     QImage avatar() const;
     void login() const;
@@ -81,8 +83,9 @@ signals:
     void accountStateChanged();
     void statusChanged();
     void desktopNotificationsAllowedChanged();
+    void headerColorChanged();
+    void headerTextColorChanged();
     void accentColorChanged();
-    void accentContrastingTextColorChanged();
 
 public slots:
     void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);

@@ -74,8 +74,9 @@ User::User(AccountStatePtr &account, const bool &isCurrent, QObject *parent)
     connect(_account->account().data(), &Account::userStatusChanged, this, &User::statusChanged);
     connect(_account.data(), &AccountState::desktopNotificationsAllowedChanged, this, &User::desktopNotificationsAllowedChanged);
 
+    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::headerColorChanged);
+    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::headerTextColorChanged);
     connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::accentColorChanged);
-    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::accentContrastingTextColorChanged);
 
     connect(_activityModel, &ActivityListModel::sendNotificationRequest, this, &User::slotSendNotificationRequest);
 }
@@ -702,15 +703,27 @@ bool User::hasActivities() const
     return _account->account()->capabilities().hasActivities();
 }
 
-QColor User::accentColor() const
+QColor User::headerColor() const
 {
     const auto serverColor = _account->account()->capabilities().serverColor();
     return serverColor.isValid() ? serverColor : Theme::defaultColor();
 }
 
-QColor User::accentContrastingTextColor() const
+QColor User::headerTextColor() const
 {
     return _account->account()->capabilities().serverTextColor();
+}
+
+QColor User::accentColor() const
+{
+    // TODO: Adjust when dark theme is a thing
+    const auto serverColor = _account->account()->capabilities().serverColor();
+    auto darknessAdjustment = (1 - Theme::getColorDarkness(serverColor)) * 8;
+    darknessAdjustment *= darknessAdjustment;
+    const auto adjusted = serverColor.isValid() ?
+        Theme::isDarkColor(serverColor) ? serverColor : serverColor.darker(125 + darknessAdjustment) :
+        QColor();
+    return adjusted.isValid() ? adjusted : Theme::defaultColor();
 }
 
 AccountAppList User::appList() const

@@ -58,7 +58,7 @@ Item {
             imageSource: root.imageSource
             imageSourceHover: root.imageSourceHover
 
-            bgColor: UserModel.currentUser.serverColor
+            bgColor: UserModel.currentUser.headerColor
 
             onClicked: root.clicked()
         }
