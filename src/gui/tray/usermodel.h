@@ -25,8 +25,8 @@ class User : public QObject
     Q_OBJECT
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     Q_PROPERTY(QString server READ server CONSTANT)
-    Q_PROPERTY(QColor serverColor READ serverColor NOTIFY serverColorChanged)
-    Q_PROPERTY(QColor serverTextColor READ serverTextColor NOTIFY serverTextColorChanged)
+    Q_PROPERTY(QColor accentColor READ accentColor NOTIFY accentColorChanged)
+    Q_PROPERTY(QColor accentContrastingTextColor READ accentContrastingTextColor NOTIFY accentContrastingTextColorChanged)
     Q_PROPERTY(bool serverHasUserStatus READ serverHasUserStatus CONSTANT)
     Q_PROPERTY(QUrl statusIcon READ statusIcon NOTIFY statusChanged)
     Q_PROPERTY(QString statusEmoji READ statusEmoji NOTIFY statusChanged)
@@ -57,8 +57,8 @@ public:
     bool serverHasUserStatus() const;
     AccountApp *talkApp() const;
     bool hasActivities() const;
-    QColor serverColor() const;
-    QColor serverTextColor() const;
+    QColor accentColor() const;
+    QColor accentContrastingTextColor() const;
     AccountAppList appList() const;
     QImage avatar() const;
     void login() const;
@@ -81,8 +81,8 @@ signals:
     void accountStateChanged();
     void statusChanged();
     void desktopNotificationsAllowedChanged();
-    void serverColorChanged();
-    void serverTextColorChanged();
+    void accentColorChanged();
+    void accentContrastingTextColorChanged();
 
 public slots:
     void slotItemCompleted(const QString &folder, const SyncFileItemPtr &item);
@@ -179,7 +179,6 @@ public:
     enum UserRoles {
         NameRole = Qt::UserRole + 1,
         ServerRole,
-        ServerColorRole,
         ServerHasUserStatusRole,
         StatusIconRole,
         StatusEmojiRole,

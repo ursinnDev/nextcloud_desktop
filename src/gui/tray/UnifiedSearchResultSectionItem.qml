@@ -14,7 +14,7 @@ Label {
 
     text: section
     font.pixelSize: Style.topLinePixelSize
-    color: UserModel.currentUser.serverColor
+    color: UserModel.currentUser.accentColor
 
     Accessible.role: Accessible.Separator
     Accessible.name: qsTr("Search results section %1").arg(section)

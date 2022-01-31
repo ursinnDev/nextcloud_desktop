@@ -74,8 +74,8 @@ User::User(AccountStatePtr &account, const bool &isCurrent, QObject *parent)
     connect(_account->account().data(), &Account::userStatusChanged, this, &User::statusChanged);
     connect(_account.data(), &AccountState::desktopNotificationsAllowedChanged, this, &User::desktopNotificationsAllowedChanged);
 
-    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::serverColorChanged);
-    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::serverTextColorChanged);
+    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::accentColorChanged);
+    connect(_account->account().data(), &Account::capabilitiesChanged, this, &User::accentContrastingTextColorChanged);
 
     connect(_activityModel, &ActivityListModel::sendNotificationRequest, this, &User::slotSendNotificationRequest);
 }
@@ -702,13 +702,13 @@ bool User::hasActivities() const
     return _account->account()->capabilities().hasActivities();
 }
 
-QColor User::serverColor() const
+QColor User::accentColor() const
 {
     const auto serverColor = _account->account()->capabilities().serverColor();
     return serverColor.isValid() ? serverColor : Theme::defaultColor();
 }
 
-QColor User::serverTextColor() const
+QColor User::accentContrastingTextColor() const
 {
     return _account->account()->capabilities().serverTextColor();
 }
@@ -979,8 +979,6 @@ QVariant UserModel::data(const QModelIndex &index, int role) const
         return _users[index.row()]->name();
     } else if (role == ServerRole) {
         return _users[index.row()]->server();
-    } else if (role == ServerColorRole) {
-        return _users[index.row()]->serverColor();
     } else if (role == ServerHasUserStatusRole) {
         return _users[index.row()]->serverHasUserStatus();
     } else if (role == StatusIconRole) {
@@ -1008,7 +1006,6 @@ QHash<int, QByteArray> UserModel::roleNames() const
     QHash<int, QByteArray> roles;
     roles[NameRole] = "name";
     roles[ServerRole] = "server";
-    roles[ServerColorRole] = "serverColor";
     roles[ServerHasUserStatusRole] = "serverHasUserStatus";
     roles[StatusIconRole] = "statusIcon";
     roles[StatusEmojiRole] = "statusEmoji";

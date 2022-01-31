@@ -122,7 +122,7 @@ Window {
             anchors.right:  trayWindowBackground.right
             anchors.top:    trayWindowBackground.top
             height:         Style.trayWindowHeaderHeight
-            color:          UserModel.currentUser.serverColor
+            color:          UserModel.currentUser.accentColor
 
             RowLayout {
                 id: trayWindowHeaderLayout
@@ -363,7 +363,7 @@ Window {
                                 height: width
                                 anchors.bottom: currentAccountAvatar.bottom
                                 anchors.right: currentAccountAvatar.right
-                                color: UserModel.currentUser.serverColor
+                                color: UserModel.currentUser.accentColor
                                 radius: width*0.5
                             }
 
@@ -410,7 +410,7 @@ Window {
                                 width: Style.currentAccountLabelWidth
                                 text: UserModel.currentUser.name
                                 elide: Text.ElideRight
-                                color: UserModel.currentUser.serverTextColor
+                                color: UserModel.currentUser.accentContrastingTextColor
                                 font.pixelSize: Style.topLinePixelSize
                                 font.bold: true
                             }
@@ -438,7 +438,7 @@ Window {
                                           ? UserModel.currentUser.statusMessage
                                           : UserModel.currentUser.server
                                     elide: Text.ElideRight
-                                    color: UserModel.currentUser.serverTextColor
+                                    color: UserModel.currentUser.accentContrastingTextColor
                                     font.pixelSize: Style.subLinePixelSize
                                 }
                             }
@@ -446,7 +446,7 @@ Window {
 
                         ColorOverlay {
                             cached: true
-                            color: UserModel.currentUser.serverTextColor
+                            color: UserModel.currentUser.accentContrastingTextColor
                             width: source.width
                             height: source.height
                             source: Image {
@@ -479,7 +479,7 @@ Window {
                         id: openLocalFolderButton
                         visible: UserModel.currentUser.hasLocalFolder
                         icon.source: "qrc:///client/theme/white/folder.svg"
-                        icon.color: UserModel.currentUser.serverTextColor
+                        icon.color: UserModel.currentUser.accentContrastingTextColor
                         onClicked: UserModel.openCurrentAccountLocalFolder()
 
                         Rectangle {
@@ -521,7 +521,7 @@ Window {
 
                     visible: UserModel.currentUser.serverHasTalk
                     icon.source: "qrc:///client/theme/white/talk-app.svg"
-                    icon.color: UserModel.currentUser.serverTextColor
+                    icon.color: UserModel.currentUser.accentContrastingTextColor
                     onClicked: UserModel.openCurrentAccountTalk()
 
                     Accessible.role: Accessible.Button
@@ -532,7 +532,7 @@ Window {
                 HeaderButton {
                     id: trayWindowAppsButton
                     icon.source: "qrc:///client/theme/white/more-apps.svg"
-                    icon.color: UserModel.currentUser.serverTextColor
+                    icon.color: UserModel.currentUser.accentContrastingTextColor
 
                     onClicked: {
                         if(appsMenu.count <= 0) {

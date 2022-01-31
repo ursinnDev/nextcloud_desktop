@@ -30,7 +30,7 @@ TextField {
 
     background: Rectangle {
         radius: 5
-        border.color: parent.activeFocus ? UserModel.currentUser.serverColor : Style.menuBorder
+        border.color: parent.activeFocus ? UserModel.currentUser.accentColor : Style.menuBorder
         border.width: 1
     }
 
