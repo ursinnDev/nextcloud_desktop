@@ -375,7 +375,7 @@ Window {
                                 height: width
                                 anchors.bottom: currentAccountAvatar.bottom
                                 anchors.right: currentAccountAvatar.right
-                                color: accountBtnMouseArea.containsMouse ? "white" : "transparent"
+                                color: currentAccountButton.hovered ? "white" : "transparent"
                                 opacity: 0.2
                                 radius: width*0.5
                             }
@@ -475,23 +475,15 @@ Window {
                     Layout.preferredHeight: Style.trayWindowHeaderHeight
                     Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
+                    Accessible.role: Accessible.Button
+                    Accessible.name: qsTr("Open local folder of current account")
+
                     HeaderButton {
                         id: openLocalFolderButton
                         visible: UserModel.currentUser.hasLocalFolder
                         icon.source: "qrc:///client/theme/white/folder.svg"
                         icon.color: UserModel.currentUser.headerTextColor
                         onClicked: UserModel.openCurrentAccountLocalFolder()
-
-                        Rectangle {
-                            id: folderStateIndicatorBackground
-                            width: Style.folderStateIndicatorSize
-                            height: width
-                            anchors.top: openLocalFolderButton.verticalCenter
-                            anchors.left: openLocalFolderButton.horizontalCenter
-                            color: UserModel.curent
-                            radius: width*0.5
-                            z: 1
-                        }
 
                         Image {
                             id: folderStateIndicator
@@ -508,12 +500,30 @@ Window {
 
                             Accessible.role: Accessible.Indicator
                             Accessible.name: UserModel.currentUser.isConnected ? qsTr("Connected") : qsTr("Disconnected")
-                            z: 2
+                            z: 1
+
+                            Rectangle {
+                                id: folderStateIndicatorBackground
+                                width: Style.folderStateIndicatorSize + 2
+                                height: width
+                                anchors.centerIn: parent
+                                color: UserModel.currentUser.headerColor
+                                radius: width*0.5
+                                z: -2
+                            }
+
+                            Rectangle {
+                                id: folderStateIndicatorBackgroundMouseHover
+                                width: Style.folderStateIndicatorSize + 2
+                                height: width
+                                anchors.centerIn: parent
+                                color: openLocalFolderButton.hovered ? "white" : "transparent"
+                                opacity: 0.2
+                                radius: width*0.5
+                                z: -1
+                            }
                         }
                     }
-
-                    Accessible.role: Accessible.Button
-                    Accessible.name: qsTr("Open local folder of current account")
                 }
 
                 HeaderButton {
