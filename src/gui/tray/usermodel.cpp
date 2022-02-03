@@ -716,14 +716,17 @@ QColor User::headerTextColor() const
 
 QColor User::accentColor() const
 {
-    // TODO: Adjust when dark theme is a thing
+    // This will need adjusting when dark theme is a thing
     const auto serverColor = _account->account()->capabilities().serverColor();
-    auto darknessAdjustment = (1 - Theme::getColorDarkness(serverColor)) * 8;
-    darknessAdjustment *= darknessAdjustment;
-    const auto adjusted = serverColor.isValid() ?
-        Theme::isDarkColor(serverColor) ? serverColor : serverColor.darker(125 + darknessAdjustment) :
-        QColor();
-    return adjusted.isValid() ? adjusted : Theme::defaultColor();
+
+    if(!serverColor.isValid()) {
+        return QColor();
+    }
+
+    auto darknessAdjustment = (int)((1 - Theme::getColorDarkness(serverColor)) * 8);
+    darknessAdjustment *= darknessAdjustment; // Square the value to pronounce the darkness more in lighter colours
+    const auto adjusted = Theme::isDarkColor(serverColor) ? serverColor : serverColor.darker(125 + darknessAdjustment);
+    return adjusted;
 }
 
 AccountAppList User::appList() const
