@@ -177,7 +177,7 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
 
     const auto generatePreviewMap = [](PreviewData preview) {
         return(QVariantMap {
-            {QStringLiteral("source"), QStringLiteral("image://activity-item-icon/").append(preview._source)},
+            {QStringLiteral("source"), QStringLiteral("image://tray-image-provider/").append(preview._source)},
                {QStringLiteral("link"), preview._link},
                {QStringLiteral("mimeType"), preview._mimeType},
                {QStringLiteral("fileId"), preview._fileId},

@@ -65,8 +65,7 @@ void Systray::setTrayEngine(QQmlApplicationEngine *trayEngine)
     _trayEngine->addImportPath("qrc:/qml/theme");
     _trayEngine->addImageProvider("avatars", new ImageProvider);
     _trayEngine->addImageProvider(QLatin1String("svgimage-custom-color"), new OCC::Ui::SvgImageProvider);
-    _trayEngine->addImageProvider(QLatin1String("unified-search-result-icon"), new TrayImageProvider);
-    _trayEngine->addImageProvider(QLatin1String("activity-item-icon"), new TrayImageProvider);
+    _trayEngine->addImageProvider(QLatin1String("tray-image-provider"), new TrayImageProvider);
 }
 
 Systray::Systray()
