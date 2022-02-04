@@ -33,9 +33,18 @@ Label {
     signal clicked(QtObject mouse)
 
     ToolTip {
+        id: customTextButtonTooltip
         text: root.toolTipText
         delay: Qt.styleHints.mousePressAndHoldInterval
         visible: root.toolTipText !== "" && root.hovered
+        contentItem: Label {
+            text: customTextButtonTooltip.text
+            color: Style.ncTextColor
+        }
+        background: Rectangle {
+            border.color: Style.menuBorder
+            color: Style.backgroundColor
+        }
     }
 
     MouseArea {

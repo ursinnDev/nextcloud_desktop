@@ -49,7 +49,8 @@ RowLayout {
             width: parent.width
             elide: Text.ElideRight
             font.pixelSize: Style.topLinePixelSize
-            color: root.activityData.activityTextTitleColor
+            color: Style.ncTextColor
+            //color: root.activityData.activityTextTitleColor
         }
 
         Label {
@@ -62,6 +63,7 @@ RowLayout {
             width: parent.width
             elide: Text.ElideRight
             font.pixelSize: Style.subLinePixelSize
+            color: Style.ncTextColor
         }
 
         Label {
@@ -71,7 +73,7 @@ RowLayout {
             width: parent.width
             elide: Text.ElideRight
             font.pixelSize: Style.subLinePixelSize
-            color: "#808080"
+            color: Style.ncSecondaryTextColor
         }
     }
 
@@ -85,9 +87,20 @@ RowLayout {
 
         Layout.margins: Style.roundButtonBackgroundVerticalMargins
 
-        ToolTip.visible: hovered
-        ToolTip.delay: Qt.styleHints.mousePressAndHoldInterval
-        ToolTip.text: qsTr("Dismiss")
+        ToolTip {
+            id: dismissActionButtonTooltip
+            visible: parent.hovered
+            delay: Qt.styleHints.mousePressAndHoldInterval
+            text: qsTr("Dismiss")
+            contentItem: Label {
+                text: dismissActionButtonTooltip.text
+                color: Style.ncTextColor
+            }
+            background: Rectangle {
+                border.color: Style.menuBorder
+                color: Style.backgroundColor
+            }
+        }
 
         Accessible.name: qsTr("Dismiss")
 
@@ -99,7 +112,9 @@ RowLayout {
 
         contentItem: Image {
             anchors.fill: parent
-            source: parent.hovered ? "image://svgimage-custom-color/clear.svg/black" : "image://svgimage-custom-color/clear.svg/grey"
+            source: parent.hovered ? Systray.darkMode ?
+                "image://svgimage-custom-color/clear.svg/white" : "image://svgimage-custom-color/clear.svg/black" :
+                "image://svgimage-custom-color/clear.svg/grey"
             sourceSize.width: 24
             sourceSize.height: 24
         }
@@ -116,7 +131,7 @@ RowLayout {
         visible: root.activityData.isShareable
 
         imageSource: "image://svgimage-custom-color/share.svg" + "/" + Style.ncBlue
-        imageSourceHover: "image://svgimage-custom-color/share.svg" + "/" + Style.ncTextColor
+        imageSourceHover: Systray.darkMode ? "image://svgimage-custom-color/share.svg/white" : "image://svgimage-custom-color/share.svg/black"
 
         toolTipText: qsTr("Open share dialog")
 

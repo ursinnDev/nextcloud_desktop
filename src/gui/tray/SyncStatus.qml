@@ -60,6 +60,7 @@ RowLayout {
             verticalAlignment: Text.AlignVCenter
             font.pixelSize: Style.topLinePixelSize
             font.bold: true
+            color: Style.ncTextColor
         }
 
         Loader {
@@ -82,7 +83,7 @@ RowLayout {
 
             text: syncStatus.syncStatusDetailString
             visible: syncStatus.syncStatusDetailString !== ""
-            color: "#808080"
+            color: Style.ncSecondaryTextColor
             font.pixelSize: Style.subLinePixelSize
         }
     }

@@ -9,9 +9,12 @@ QtObject {
 
     // Colors
     property color ncBlue:      Theme.wizardHeaderBackgroundColor
-    property color ncTextColor: Theme.wizardHeaderTitleColor
-    property color lightHover:  "#f7f7f7"
-    property color menuBorder:  "#bdbdbd"
+    property color ncTextColor: Systray.darkMode ? "white" : "black"
+    property color ncSecondaryTextColor: "#808080"
+    property color ncHeaderTextColor: "white"
+    property color lightHover:  Systray.darkMode ? "#595959" : "#f7f7f7"
+    property color menuBorder:  Systray.darkMode ? "#666666" : "#bdbdbd"
+    property color backgroundColor: Systray.darkMode ? "#181818" : "white"
 
     // ErrorBox colors
     property color errorBoxTextColor:       Theme.errorBoxTextColor
@@ -77,8 +80,8 @@ QtObject {
     readonly property int unifiedSearchResulIconLeftMargin: 12
     readonly property int unifiedSearchResulTitleFontSize: topLinePixelSize
     readonly property int unifiedSearchResulSublineFontSize: subLinePixelSize
-    readonly property string unifiedSearchResulTitleColor: "black"
-    readonly property string unifiedSearchResulSublineColor: "grey"
+    readonly property string unifiedSearchResulTitleColor: ncTextColor
+    readonly property string unifiedSearchResulSublineColor: ncSecondaryTextColor
 
     readonly property var fontMetrics: FontMetrics {}
 

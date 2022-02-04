@@ -13,8 +13,8 @@ Column {
     property int itemHeight: Style.trayWindowHeaderHeight
     property int titleFontSize: Style.topLinePixelSize
     property int sublineFontSize: Style.subLinePixelSize
-    property string titleColor: "black"
-    property string sublineColor: "grey"
+    property string titleColor: Style.ncTextColor
+    property string sublineColor: Style.ncSecondaryTextColor
     property string iconColor: "#afafaf"
 
     Repeater {

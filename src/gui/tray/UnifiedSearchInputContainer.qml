@@ -26,10 +26,13 @@ TextField {
 
     selectByMouse: true
 
+    palette.text: Style.ncSecondaryTextColor
+
     background: Rectangle {
         radius: 5
         border.color: parent.activeFocus ? Style.ncBlue : Style.menuBorder
         border.width: 1
+        color: Style.backgroundColor
     }
 
     Image {

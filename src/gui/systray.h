@@ -39,6 +39,7 @@ public:
 };
 
 #ifdef Q_OS_OSX
+bool osXInDarkMode();
 bool canOsXSendUserNotification();
 void sendOsXUserNotification(const QString &title, const QString &message);
 void setTrayWindowLevelAndVisibleOnAllSpaces(QWindow *window);
@@ -55,6 +56,7 @@ class Systray
 
     Q_PROPERTY(QString windowTitle READ windowTitle CONSTANT)
     Q_PROPERTY(bool useNormalWindow READ useNormalWindow CONSTANT)
+    Q_PROPERTY(bool darkMode READ darkMode CONSTANT)
 
 public:
     static Systray *instance();
@@ -70,6 +72,7 @@ public:
     bool isOpen();
     QString windowTitle() const;
     bool useNormalWindow() const;
+    bool darkMode() const;
 
     Q_INVOKABLE void pauseResumeSync();
     Q_INVOKABLE bool syncIsPaused();

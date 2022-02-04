@@ -223,6 +223,29 @@ bool Systray::useNormalWindow() const
     return cfg.showMainDialogAsNormalWindow();
 }
 
+bool Systray::darkMode() const
+{
+#if defined(Q_OS_MACOS)
+    return osXInDarkMode();
+// Windows: Check registry for dark mode
+#elif defined(Q_OS_WIN)
+    const auto darkModeSubkey = QStringLiteral("Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize");
+    if (!Utility::registryKeyExists(HKEY_CURRENT_USER, darkModeSubkey)) {
+        return false;
+    }
+    const auto darkMode = Utility::registryGetKeyValue(HKEY_CURRENT_USER, darkModeSubkey, "AppsUseLightTheme");
+    switch (darkMode.toInt()) {
+    case 0:
+        return true;
+    case 1:
+        return false;
+    }
+// Probably Linux
+#else
+    return Theme::isDarkColor(QGuiApplication::palette().window().color());
+#endif
+}
+
 Q_INVOKABLE void Systray::setOpened()
 {
     _isOpen = true;

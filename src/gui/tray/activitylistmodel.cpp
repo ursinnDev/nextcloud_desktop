@@ -33,6 +33,7 @@
 
 #include "activitydata.h"
 #include "activitylistmodel.h"
+#include "systray.h"
 
 #include "theme.h"
 
@@ -200,24 +201,30 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
     }
 
     case ActionIconRole: {
+        auto colorIconPath = Systray::instance()->darkMode() ? QStringLiteral("qrc:///client/theme/white/") : QStringLiteral("qrc:///client/theme/black/");
         if (a._type == Activity::NotificationType) {
-            return "qrc:///client/theme/black/bell.svg";
+            colorIconPath.append("bell.svg");
+            return colorIconPath;
         } else if (a._type == Activity::SyncResultType) {
-            return "qrc:///client/theme/black/state-error.svg";
+            colorIconPath.append("state-error.svg");
+            return colorIconPath;
         } else if (a._type == Activity::SyncFileItemType) {
             if (a._status == SyncFileItem::NormalError
                 || a._status == SyncFileItem::FatalError
                 || a._status == SyncFileItem::DetailError
                 || a._status == SyncFileItem::BlacklistedError) {
-                return "qrc:///client/theme/black/state-error.svg";
+                colorIconPath.append("state-error.svg");
+                return colorIconPath;
             } else if (a._status == SyncFileItem::SoftError
                 || a._status == SyncFileItem::Conflict
                 || a._status == SyncFileItem::Restoration
                 || a._status == SyncFileItem::FileLocked
                 || a._status == SyncFileItem::FileNameInvalid) {
-                return "qrc:///client/theme/black/state-warning.svg";
+                colorIconPath.append("state-warning.svg");
+                return colorIconPath;
             } else if (a._status == SyncFileItem::FileIgnored) {
-                return "qrc:///client/theme/black/state-info.svg";
+                colorIconPath.append("state-info.svg");
+                return colorIconPath;
             } else {
                 // File sync successful
                 if (a._fileAction == "file_created") {
@@ -225,13 +232,15 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
                 } else if (a._fileAction == "file_deleted") {
                     return "qrc:///client/theme/colored/delete.svg";
                 } else {
-                    return "qrc:///client/theme/change.svg";
+                    colorIconPath.append("change.svg");
+                    return colorIconPath;
                 }
             }
         } else {
             // We have an activity
             if (a._icon.isEmpty()) {
-                return "qrc:///client/theme/black/activity.svg";
+                colorIconPath.append("activity.svg");
+                return colorIconPath;
             }
 
             return a._icon;
@@ -416,6 +425,22 @@ void ActivityListModel::activitiesReceived(const QJsonDocument &json, int status
             }
 
             a._subjectDisplay = displayString;
+        }
+
+        if(Systray::instance()->darkMode()) {
+            auto colorIconPath = QStringLiteral("qrc:///client/theme/white/");
+            if(a._icon.contains("change.svg")) {
+                colorIconPath.append("change.svg");
+                a._icon = colorIconPath;
+            } else if(a._icon.contains("calendar.svg")) {
+                colorIconPath.append("calendar.svg");
+                a._icon = colorIconPath;
+            } else if(a._icon.contains("personal.svg")) {
+                colorIconPath.append("user.svg");
+                a._icon = colorIconPath;
+            }  else if(a._icon.contains("core/img/actions") && Systray::instance()->darkMode()) {
+                a._icon.insert(a._icon.indexOf(".svg"), "-white");
+            }
         }
 
         list.append(a);
