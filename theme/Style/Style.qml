@@ -12,7 +12,7 @@ QtObject {
     property color ncTextColor: Systray.darkMode ? "white" : "black"
     property color ncSecondaryTextColor: "#808080"
     property color ncHeaderTextColor: "white"
-    property color lightHover:  Systray.darkMode ? "#595959" : "#f7f7f7"
+    property color lightHover:  Systray.darkMode ? "#202020" : "#f7f7f7"
     property color menuBorder:  Systray.darkMode ? "#666666" : "#bdbdbd"
     property color backgroundColor: Systray.darkMode ? "#181818" : "white"
 
