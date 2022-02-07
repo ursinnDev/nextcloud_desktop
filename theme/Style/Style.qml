@@ -9,12 +9,12 @@ QtObject {
 
     // Colors
     property color ncBlue:      Theme.wizardHeaderBackgroundColor
-    property color ncTextColor: Systray.darkMode ? "white" : "black"
+    property color ncTextColor: Theme.systemPalette.windowText
     property color ncSecondaryTextColor: "#808080"
     property color ncHeaderTextColor: "white"
-    property color lightHover:  Systray.darkMode ? "#202020" : "#f7f7f7"
-    property color menuBorder:  Systray.darkMode ? "#666666" : "#bdbdbd"
-    property color backgroundColor: Systray.darkMode ? "#181818" : "white"
+    property color lightHover:  Theme.systemPalette.highlight
+    property color menuBorder:  Systray.darkMode ? Qt.lighter(backgroundColor, 3) : Qt.darker(backgroundColor, 1.5)
+    property color backgroundColor: Theme.systemPalette.base
 
     // ErrorBox colors
     property color errorBoxTextColor:       Theme.errorBoxTextColor

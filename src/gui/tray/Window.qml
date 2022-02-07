@@ -22,7 +22,6 @@ Window {
     color:      "transparent"
     flags:      Systray.useNormalWindow ? Qt.Window : Qt.Dialog | Qt.FramelessWindowHint
 
-
     property var fileActivityDialogAbsolutePath: ""
     readonly property int maxMenuHeight: Style.trayWindowHeight - Style.trayWindowHeaderHeight - 2 * Style.trayWindowBorderWidth
 
@@ -138,6 +137,7 @@ Window {
                     Layout.preferredHeight: Style.trayWindowHeaderHeight
                     display:                AbstractButton.IconOnly
                     flat:                   true
+                    palette: Style.systemPalette
 
                     Accessible.role: Accessible.ButtonMenu
                     Accessible.name: qsTr("Current account")
@@ -169,6 +169,7 @@ Window {
                         width: (Style.currentAccountButtonWidth - 2)
                         height: Math.min(implicitHeight, maxMenuHeight)
                         closePolicy: Menu.CloseOnPressOutsideParent | Menu.CloseOnEscape
+                        palette: Style.palette
 
                         background: Rectangle {
                             border.color: Style.menuBorder
@@ -218,6 +219,7 @@ Window {
                             id: addAccountButton
                             height: Style.addAccountButtonHeight
                             hoverEnabled: true
+                            palette: Theme.systemPalette
 
                             background: Item {
                                 height: parent.height
@@ -380,7 +382,7 @@ Window {
                                 height: width
                                 anchors.bottom: currentAccountAvatar.bottom
                                 anchors.right: currentAccountAvatar.right
-                                color: accountBtnMouseArea.containsMouse ? "white" : "transparent"
+                                color: currentAccountButton.hovered ? "white" : "transparent"
                                 opacity: 0.2
                                 radius: width*0.5
                             }
@@ -579,7 +581,7 @@ Window {
 
                                 background: Item {
                                     height: parent.height
-                                    width: parent.menu.width
+                                    width: parent.width
                                     Rectangle {
                                         anchors.fill: parent
                                         anchors.margins: 1

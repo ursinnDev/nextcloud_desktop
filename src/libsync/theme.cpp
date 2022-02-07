@@ -889,4 +889,9 @@ QColor Theme::errorBoxBorderColor() const
     return QColor{"black"};
 }
 
+QPalette Theme::systemPalette() const
+{
+    return QGuiApplication::palette();
+}
+
 } // end namespace client
