@@ -12,8 +12,8 @@ Label {
 
     height: implicitHeight
 
-    property color textColor: Style.unifiedSearchResulTitleColor
-    property color textColorHovered: Style.unifiedSearchResulSublineColor
+    property color textColor: Style.ncTextColor
+    property color textColorHovered: Style.ncSecondaryTextColor
 
     Accessible.role: Accessible.Button
     Accessible.name: text

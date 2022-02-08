@@ -728,8 +728,8 @@ Window {
                     iconLeftMargin: Style.unifiedSearchResulIconLeftMargin
                     titleFontSize: Style.unifiedSearchResulTitleFontSize
                     sublineFontSize: Style.unifiedSearchResulSublineFontSize
-                    titleColor: Style.unifiedSearchResulTitleColor
-                    sublineColor: Style.unifiedSearchResulSublineColor
+                    titleColor: Style.ncTextColor
+                    sublineColor: Style.ncSecondaryTextColor
                     currentFetchMoreInProgressProviderId: unifiedSearchResultsListView.model.currentFetchMoreInProgressProviderId
                     fetchMoreTriggerClicked: unifiedSearchResultsListView.model.fetchMoreTriggerClicked
                     resultClicked: unifiedSearchResultsListView.model.resultClicked
