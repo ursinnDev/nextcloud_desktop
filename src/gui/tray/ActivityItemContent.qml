@@ -24,7 +24,7 @@ RowLayout {
 
     Item {
         Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-        Layout.leftMargin: 7
+        Layout.leftMargin: 5
         Layout.preferredWidth: shareButton.icon.width * 2
         Layout.preferredHeight: shareButton.icon.height * 2
 
@@ -40,18 +40,15 @@ RowLayout {
             sourceSize.width: 64
         }
 
-        Item {
+
+        Rectangle {
             id: mask
+            color: "white"
+            radius: 3
             anchors.fill: thumbnailImage
             visible: false
-
-            Rectangle {
-                color: "white"
-                radius: 3
-                anchors.centerIn: parent
-                width: thumbnailImage.paintedWidth
-                height: thumbnailImage.paintedHeight
-            }
+            width: thumbnailImage.paintedWidth
+            height: thumbnailImage.paintedHeight
         }
 
         OpacityMask {

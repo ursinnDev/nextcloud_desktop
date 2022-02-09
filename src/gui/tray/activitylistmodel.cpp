@@ -234,14 +234,14 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
             } else {
                 // File sync successful
                 if (a._fileAction == "file_created") {
-                    return a._previews.count() <= 0 ? "qrc:///client/theme/colored/add.svg"
-                                                    : "qrc:///client/theme/colored/add-bordered.svg";
+                    return a._previews.empty() ? "qrc:///client/theme/colored/add.svg"
+                                               : "qrc:///client/theme/colored/add-bordered.svg";
                 } else if (a._fileAction == "file_deleted") {
-                    return a._previews.count() <= 0 ? "qrc:///client/theme/colored/delete.svg"
-                                                    : "qrc:///client/theme/colored/delete-bordered.svg";
+                    return a._previews.empty() ? "qrc:///client/theme/colored/delete.svg"
+                                               : "qrc:///client/theme/colored/delete-bordered.svg";
                 } else {
-                    return a._previews.count() <= 0 ? "qrc:///client/theme/change.svg"
-                                                    : "qrc:///client/theme/colored/change-bordered.svg";
+                    return a._previews.empty() ? "qrc:///client/theme/change.svg"
+                                               : "qrc:///client/theme/colored/change-bordered.svg";
                 }
             }
         } else {
@@ -300,7 +300,7 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
     case IsCurrentUserFileActivityRole:
         return a._isCurrentUserFileActivity;
     case ThumbnailRole: {
-        if(a._previews.count() <= 0) {
+        if(a._previews.empty()) {
             return {};
         }
 
@@ -370,7 +370,7 @@ int ActivityListModel::currentItem() const
     return _currentItem;
 }
 
-void ActivityListModel::ingestActivities(const QJsonArray activities)
+void ActivityListModel::ingestActivities(const QJsonArray &activities)
 {
     ActivityList list;
 
@@ -406,7 +406,7 @@ void ActivityListModel::activitiesReceived(const QJsonDocument &json, int status
         return;
     }
 
-    if (activities.size() == 0) {
+    if (activities.empty()) {
         _doneFetching = true;
     }
 

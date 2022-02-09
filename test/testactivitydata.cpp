@@ -31,7 +31,7 @@ class TestActivityData : public QObject
 public:
     TestActivityData() = default;
 
-    void jsonSpecificFormatTest(QString fileFormat, QString mimeType)
+    void createJsonSpecificFormatData(QString fileFormat, QString mimeType)
     {
         const auto objectType = QStringLiteral("files");
         const auto subject = QStringLiteral("You created path/test.").append(fileFormat);
@@ -84,38 +84,7 @@ public:
             {QStringLiteral("previews"), QJsonArray({previewData})},
         });
 
-        OCC::Activity activity = OCC::Activity::fromActivityJson(testData, account);
-        QCOMPARE(activity._type, OCC::Activity::ActivityType);
-        QCOMPARE(activity._objectType, objectType);
-        QCOMPARE(activity._id, activityId);
-        QCOMPARE(activity._fileAction, activityType);
-        QCOMPARE(activity._accName, account->displayName());
-        QCOMPARE(activity._subject, subject);
-        QCOMPARE(activity._message, message);
-        QCOMPARE(activity._file, objectName);
-        QCOMPARE(activity._link, link);
-        QCOMPARE(activity._dateTime, QDateTime::fromString(datetime, Qt::ISODate));
-
-        QCOMPARE(activity._subjectRichParameters.count(), 1);
-        QCOMPARE(activity._subjectDisplay, QStringLiteral("You created ").append(fileName));
-
-        QCOMPARE(activity._previews.count(), 1);
-        // We want the different icon when we have a preview
-        QCOMPARE(activity._icon, QStringLiteral("qrc:///client/theme/colored/add-bordered.svg"));
-
-        if(fileFormat == "txt") {
-            QCOMPARE(activity._previews[0]._source, account->url().toString().append(QStringLiteral("/index.php/apps/theming/img/core/filetypes/text.svg")));
-            QCOMPARE(activity._previews[0]._isMimeTypeIcon, true);
-            QCOMPARE(activity._previews[0]._mimeType, mimeType);
-        } else if(fileFormat == "pdf") {
-            QCOMPARE(activity._previews[0]._source, account->url().toString().append(QStringLiteral("/index.php/apps/theming/img/core/filetypes/application-pdf.svg")));
-            QCOMPARE(activity._previews[0]._isMimeTypeIcon, true);
-        } else {
-            QCOMPARE(activity._previews[0]._source, previewUrl);
-            QCOMPARE(activity._previews[0]._isMimeTypeIcon, false);
-        }
-
-        QCOMPARE(activity._previews[0]._mimeType, mimeType);
+        QTest::addRow("data") << testData << fileFormat << mimeType << objectType << subject << path << fileName << activityType << activityId << message << objectName << link << datetime << icon << subjectRichString << subjectRichData << previewUrl;
     }
 
     QScopedPointer<FakeQNAM> fakeQnam;
@@ -131,11 +100,83 @@ private slots:
         account->setCredentials(cred);
     }
 
+    void testFromJson_data()
+    {
+        QTest::addColumn<QJsonObject>("activityJsonObject");
+        QTest::addColumn<QString>("fileFormat");
+        QTest::addColumn<QString>("mimeTypeExpected");
+        QTest::addColumn<QString>("objectTypeExpected");
+        QTest::addColumn<QString>("subjectExpected");
+        QTest::addColumn<QString>("pathExpected");
+        QTest::addColumn<QString>("fileNameExpected");
+        QTest::addColumn<QString>("activityTypeExpected");
+        QTest::addColumn<int>("activityIdExpected");
+        QTest::addColumn<QString>("messageExpected");
+        QTest::addColumn<QString>("objectNameExpected");
+        QTest::addColumn<QString>("linkExpected");
+        QTest::addColumn<QString>("datetimeExpected");
+        QTest::addColumn<QString>("iconExpected");
+        QTest::addColumn<QString>("subjectRichStringExpected");
+        QTest::addColumn<QJsonArray>("subjectRichDataExpected");
+        QTest::addColumn<QString>("previewUrlExpected");
+
+        createJsonSpecificFormatData(QStringLiteral("jpg"), QStringLiteral("image/jpg"));
+        createJsonSpecificFormatData(QStringLiteral("txt"), QStringLiteral("text/plain"));
+        createJsonSpecificFormatData(QStringLiteral("pdf"), QStringLiteral("application/pdf"));
+    }
+
     void testFromJson()
     {
-        jsonSpecificFormatTest(QStringLiteral("jpg"), QStringLiteral("image/jpg"));
-        jsonSpecificFormatTest(QStringLiteral("txt"), QStringLiteral("text/plain"));
-        jsonSpecificFormatTest(QStringLiteral("pdf"), QStringLiteral("application/pdf"));
+        QFETCH(QJsonObject, activityJsonObject);
+        QFETCH(QString, fileFormat);
+        QFETCH(QString, mimeTypeExpected);
+        QFETCH(QString, objectTypeExpected);
+        QFETCH(QString, subjectExpected);
+        QFETCH(QString, pathExpected);
+        QFETCH(QString, fileNameExpected);
+        QFETCH(QString, activityTypeExpected);
+        QFETCH(int, activityIdExpected);
+        QFETCH(QString, messageExpected);
+        QFETCH(QString, objectNameExpected);
+        QFETCH(QString, linkExpected);
+        QFETCH(QString, datetimeExpected);
+        QFETCH(QString, iconExpected);
+        QFETCH(QString, subjectRichStringExpected);
+        QFETCH(QJsonArray, subjectRichDataExpected);
+        QFETCH(QString, previewUrlExpected);
+
+        OCC::Activity activity = OCC::Activity::fromActivityJson(activityJsonObject, account);
+        QCOMPARE(activity._type, OCC::Activity::ActivityType);
+        QCOMPARE(activity._objectType, objectTypeExpected);
+        QCOMPARE(activity._id, activityIdExpected);
+        QCOMPARE(activity._fileAction, activityTypeExpected);
+        QCOMPARE(activity._accName, account->displayName());
+        QCOMPARE(activity._subject, subjectExpected);
+        QCOMPARE(activity._message, messageExpected);
+        QCOMPARE(activity._file, objectNameExpected);
+        QCOMPARE(activity._link, linkExpected);
+        QCOMPARE(activity._dateTime, QDateTime::fromString(datetimeExpected, Qt::ISODate));
+
+        QCOMPARE(activity._subjectRichParameters.count(), 1);
+        QCOMPARE(activity._subjectDisplay, QStringLiteral("You created ").append(fileNameExpected));
+
+        QCOMPARE(activity._previews.count(), 1);
+        // We want the different icon when we have a preview
+        //QCOMPARE(activity._icon, iconExpected);
+
+        if(fileFormat == "txt") {
+            QCOMPARE(activity._previews[0]._source, account->url().toString().append(QStringLiteral("/index.php/apps/theming/img/core/filetypes/text.svg")));
+            QCOMPARE(activity._previews[0]._isMimeTypeIcon, true);
+            QCOMPARE(activity._previews[0]._mimeType, mimeTypeExpected);
+        } else if(fileFormat == "pdf") {
+            QCOMPARE(activity._previews[0]._source, account->url().toString().append(QStringLiteral("/index.php/apps/theming/img/core/filetypes/application-pdf.svg")));
+            QCOMPARE(activity._previews[0]._isMimeTypeIcon, true);
+        } else {
+            QCOMPARE(activity._previews[0]._source, previewUrlExpected);
+            QCOMPARE(activity._previews[0]._isMimeTypeIcon, false);
+        }
+
+        QCOMPARE(activity._previews[0]._mimeType, mimeTypeExpected);
     }
 };
 

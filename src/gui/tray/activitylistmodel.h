@@ -136,7 +136,7 @@ private:
     void combineActivityLists();
     bool canFetchActivities() const;
 
-    void ingestActivities(QJsonArray activities);
+    void ingestActivities(const QJsonArray &activities);
 
     ActivityList _activityLists;
     ActivityList _syncFileItemLists;

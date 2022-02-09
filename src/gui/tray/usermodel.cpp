@@ -508,7 +508,7 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
         }
     };
 
-    const auto messageFromFileAction = [](const QString fileAction, const QString fileName) {
+    const auto messageFromFileAction = [](const QString &fileAction, const QString &fileName) {
         if (fileAction == "file_renamed") {
             return QObject::tr("You renamed %1").arg(fileName);
         } else if (fileAction == "file_deleted") {
@@ -567,7 +567,6 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
         }
 
         _activityModel->addSyncFileItemToActivityList(activity);
-
     } else {
         qCWarning(lcActivity) << "Item " << item->_file << " retrieved resulted in error " << item->_errorString;
 
