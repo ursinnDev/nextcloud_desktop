@@ -3,7 +3,7 @@
 
 #include "accountmanager.h"
 #include "owncloudgui.h"
-#include "pushnotifications.h"
+#include <pushnotifications.h>
 #include "userstatusselectormodel.h"
 #include "syncengine.h"
 #include "ocsjob.h"
@@ -509,11 +509,11 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
     };
 
     const auto messageFromFileAction = [](const QString &fileAction, const QString &fileName) {
-        if (fileAction == "file_renamed") {
+        if (fileAction == QStringLiteral("file_renamed")) {
             return QObject::tr("You renamed %1").arg(fileName);
-        } else if (fileAction == "file_deleted") {
+        } else if (fileAction == QStringLiteral("file_deleted")) {
             return QObject:: tr("You deleted %1").arg(fileName);
-        } else if (fileAction == "file_created") {
+        } else if (fileAction == QStringLiteral("file_created")) {
             return QObject::tr("You created %1").arg(fileName);
         } else {
             return QObject::tr("You changed %1").arg(fileName);
@@ -553,7 +553,7 @@ void User::processCompletedSyncItem(const Folder *folder, const SyncFileItemPtr 
 
             const auto localFiles = FolderMan::instance()->findFileInLocalFolders(item->_file, account());
             if (!localFiles.isEmpty()) {
-                mimeType = mimeDb.mimeTypeForFile(QFileInfo(localFiles.constFirst()));
+                mimeType = _mimeDb.mimeTypeForFile(QFileInfo(localFiles.constFirst()));
             }
 
             if(mimeType.isValid() && mimeType.inherits("text/plain")) {

@@ -125,7 +125,7 @@ private:
 
     QElapsedTimer _guiLogTimer;
     NotificationCache _notificationCache;
-    QMimeDatabase mimeDb;
+    QMimeDatabase _mimeDb;
 
     // number of currently running notification requests. If non zero,
     // no query for notifications is started.

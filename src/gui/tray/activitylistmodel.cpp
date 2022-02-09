@@ -175,7 +175,7 @@ QVariant ActivityListModel::data(const QModelIndex &index, int role) const
         return displayPath == "." || displayPath == "/" ? QString() : displayPath;
     };
 
-    const auto generatePreviewMap = [](PreviewData preview) {
+    const auto generatePreviewMap = [](const PreviewData &preview) {
         return(QVariantMap {
             {QStringLiteral("source"), QStringLiteral("image://tray-image-provider/").append(preview._source)},
                {QStringLiteral("link"), preview._link},
@@ -377,8 +377,8 @@ void ActivityListModel::ingestActivities(const QJsonArray &activities)
     QDateTime oldestDate = QDateTime::currentDateTime();
     oldestDate = oldestDate.addDays(_maxActivitiesDays * -1);
 
-    for (const auto activ : activities) {
-        auto json = activ.toObject();
+    for (const auto &activ : activities) {
+        const auto json = activ.toObject();
 
         const Activity a = Activity::fromActivityJson(json, _accountState->account());
 
@@ -399,10 +399,9 @@ void ActivityListModel::ingestActivities(const QJsonArray &activities)
 
 void ActivityListModel::activitiesReceived(const QJsonDocument &json, int statusCode)
 {
-    const auto activities = json.object().value("ocs").toObject().value("data").toArray();
+    const auto activities = json.object().value(QStringLiteral("ocs")).toObject().value(QStringLiteral("data")).toArray();
 
-    auto ast = _accountState;
-    if (!ast) {
+    if (!_accountState) {
         return;
     }
 
