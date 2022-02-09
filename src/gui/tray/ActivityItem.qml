@@ -39,6 +39,7 @@ MouseArea {
         anchors.left: root.left
         anchors.right: root.right
         anchors.rightMargin: 10
+        anchors.leftMargin: 10
 
         spacing: 0
 

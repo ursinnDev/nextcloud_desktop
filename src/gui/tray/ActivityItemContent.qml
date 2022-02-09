@@ -20,19 +20,19 @@ RowLayout {
     signal dismissButtonClicked()
     signal shareButtonClicked()
 
-    spacing: 10
+    spacing: Style.trayHorizontalMargin
 
     Item {
         Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-        Layout.leftMargin: 5
-        Layout.preferredWidth: shareButton.icon.width * 2
-        Layout.preferredHeight: shareButton.icon.height * 2
+        Layout.preferredWidth: Style.trayListItemIconSize
+        Layout.preferredHeight: Style.trayListItemIconSize
 
         Image {
             id: thumbnailImage
-            width: parent.width * 0.66
-            height: parent.height * 0.66
-            anchors.centerIn: parent
+            width: model.thumbnail.isMimeTypeIcon ? parent.width * 0.85 : parent.width * 0.8
+            height: model.thumbnail.isMimeTypeIcon ? parent.height * 0.85 : parent.height * 0.8
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
             cache: true
             source: model.thumbnail.source
             visible: false
@@ -60,9 +60,10 @@ RowLayout {
 
         Image {
             id: activityIcon
-            width: model.thumbnail !== undefined ? parent.width * 0.5 : parent.width * 0.8
-            height: model.thumbnail !== undefined ? parent.height * 0.5 : parent.height * 0.8
-            anchors.centerIn: if(model.thumbnail === undefined) parent
+            width: model.thumbnail !== undefined ? parent.width * 0.5 : parent.width * 0.85
+            height: model.thumbnail !== undefined ? parent.height * 0.5 : parent.height * 0.85
+            anchors.verticalCenter: if(model.thumbnail === undefined) parent.verticalCenter
+            anchors.left: if(model.thumbnail === undefined) parent.left
             anchors.right: if(model.thumbnail !== undefined) parent.right
             anchors.bottom: if(model.thumbnail !== undefined) parent.bottom
             cache: true
