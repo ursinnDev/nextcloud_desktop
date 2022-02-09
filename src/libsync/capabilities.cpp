@@ -242,7 +242,7 @@ bool Capabilities::userStatusSupportsEmoji() const
 QColor Capabilities::serverColor() const
 {
     if (!_capabilities.contains("theming")) {
-        return QColor();
+        return {};
     }
 
     const auto themingMap = _capabilities["theming"].toMap();
@@ -252,7 +252,7 @@ QColor Capabilities::serverColor() const
 QColor Capabilities::serverTextColor() const
 {
     if (!_capabilities.contains("theming")) {
-        return QColor();
+        return {};
     }
 
     const auto themingMap = _capabilities["theming"].toMap();

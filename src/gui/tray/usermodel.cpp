@@ -720,12 +720,14 @@ QColor User::accentColor() const
     const auto serverColor = _account->account()->capabilities().serverColor();
 
     if(!serverColor.isValid()) {
-        return QColor();
+        return {};
     }
 
-    auto darknessAdjustment = (int)((1 - Theme::getColorDarkness(serverColor)) * 8);
+    const auto effectMultiplier = 8;
+    auto darknessAdjustment = static_cast<int>((1 - Theme::getColorDarkness(serverColor)) * effectMultiplier);
     darknessAdjustment *= darknessAdjustment; // Square the value to pronounce the darkness more in lighter colours
-    const auto adjusted = Theme::isDarkColor(serverColor) ? serverColor : serverColor.darker(125 + darknessAdjustment);
+    const auto baseAdjustment = 125;
+    const auto adjusted = Theme::isDarkColor(serverColor) ? serverColor : serverColor.darker(baseAdjustment + darknessAdjustment);
     return adjusted;
 }
 
