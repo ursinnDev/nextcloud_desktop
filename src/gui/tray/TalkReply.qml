@@ -61,7 +61,7 @@ ColumnLayout {
         }    
         Button {
             id: sendReply
-            icon.source: "qrc:///client/theme/confirm.svg"
+            icon.source: "image://svgimage-custom-color/send.svg" + "/" + Style.ncBlue
             icon.width: 24
             icon.height: 24
             icon.color: "transparent"
