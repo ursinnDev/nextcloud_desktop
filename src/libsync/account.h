@@ -109,6 +109,10 @@ public:
     /// The name of the account as shown in the toolbar
     QString displayName() const;
 
+    QColor accentColor() const;
+    QColor headerColor() const;
+    QColor headerTextColor() const;
+
     /// The internal id of the account.
     QString id() const;
 

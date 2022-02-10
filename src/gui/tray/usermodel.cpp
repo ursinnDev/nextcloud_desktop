@@ -16,7 +16,6 @@
 #include "tray/notificationcache.h"
 #include "tray/unifiedsearchresultslistmodel.h"
 #include "userstatusconnector.h"
-#include "theme.h"
 
 #include <QDesktopServices>
 #include <QIcon>
@@ -705,30 +704,17 @@ bool User::hasActivities() const
 
 QColor User::headerColor() const
 {
-    const auto serverColor = _account->account()->capabilities().serverColor();
-    return serverColor.isValid() ? serverColor : Theme::defaultColor();
+    return _account->account()->headerColor();
 }
 
 QColor User::headerTextColor() const
 {
-    return _account->account()->capabilities().serverTextColor();
+    return _account->account()->headerTextColor();
 }
 
 QColor User::accentColor() const
 {
-    // This will need adjusting when dark theme is a thing
-    const auto serverColor = _account->account()->capabilities().serverColor();
-
-    if(!serverColor.isValid()) {
-        return {};
-    }
-
-    const auto effectMultiplier = 8;
-    auto darknessAdjustment = static_cast<int>((1 - Theme::getColorDarkness(serverColor)) * effectMultiplier);
-    darknessAdjustment *= darknessAdjustment; // Square the value to pronounce the darkness more in lighter colours
-    const auto baseAdjustment = 125;
-    const auto adjusted = Theme::isDarkColor(serverColor) ? serverColor : serverColor.darker(baseAdjustment + darknessAdjustment);
-    return adjusted;
+    return _account->account()->accentColor();
 }
 
 AccountAppList User::appList() const
