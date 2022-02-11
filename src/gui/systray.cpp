@@ -515,7 +515,11 @@ AccessManagerFactory::AccessManagerFactory()
 
 QNetworkAccessManager* AccessManagerFactory::create(QObject *parent)
 {
-    return new AccessManager(parent);
+    const auto am = new AccessManager(parent);
+    QNetworkDiskCache *diskCache = new QNetworkDiskCache(am);
+    diskCache->setCacheDirectory("cacheDir");
+    am->setCache(diskCache);
+    return am;
 }
 
 } // namespace OCC
