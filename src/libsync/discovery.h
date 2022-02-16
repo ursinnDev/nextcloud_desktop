@@ -195,6 +195,8 @@ private:
 
     bool isAnyParentBeingRestored(const QString &file) const;
 
+    bool isRenameAndIsAllowed(const QString &originalPath, const QString &targetPath) const;
+
     struct MovePermissionResult
     {
         // whether moving/renaming the source is ok

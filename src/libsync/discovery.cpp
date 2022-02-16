@@ -1295,8 +1295,10 @@ void ProcessDirectoryJob::processFileAnalyzeLocalInfo(
             chopVirtualFileSuffix(serverOriginalPath);
         auto job = new RequestEtagJob(_discoveryData->_account, serverOriginalPath, this);
         connect(job, &RequestEtagJob::finishedWithResult, this, [=](const HttpResult<QByteArray> &etag) mutable {
+            
+
             if (!etag || (etag.get() != base._etag && !item->isDirectory()) || _discoveryData->isRenamed(originalPath)
-                || isAnyParentBeingRestored(originalPath)) {
+                || (isAnyParentBeingRestored(originalPath) && !isRenameAndIsAllowed(originalPath, path._target))) {
                 qCInfo(lcDisco) << "Can't rename because the etag has changed or the directory is gone or we are restoring one of the file's parents." << originalPath;
                 // Can't be a rename, leave it as a new.
                 postProcessLocalNew();
@@ -1577,6 +1579,24 @@ bool ProcessDirectoryJob::isAnyParentBeingRestored(const QString &file) const
         }
     }
     return false;
+}
+
+bool ProcessDirectoryJob::isRenameAndIsAllowed(const QString &originalPath, const QString &targetPath) const
+{
+    if (!(originalPath.startsWith(_currentFolder._original)
+        && originalPath.lastIndexOf('/') == _currentFolder._original.size())) {
+        // early-out if it is a move, not a rename
+        return false;
+    }
+
+    OCC::SyncJournalFileRecord base;
+    // are we allowed to rename?
+    if (!_discoveryData || !_discoveryData->_statedb || !_discoveryData->_statedb->getFileRecord(originalPath, &base)) {
+        return false;
+    }
+    qCWarning(lcDisco) << "isRenameAndIsAllowed from" << originalPath << " to" << targetPath << " :"
+                       << base._remotePerm.hasPermission(RemotePermissions::CanRename);
+    return base._remotePerm.hasPermission(RemotePermissions::CanRename);
 }
 
 auto ProcessDirectoryJob::checkMovePermissions(RemotePermissions srcPerm, const QString &srcPath,

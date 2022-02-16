@@ -216,13 +216,10 @@ private slots:
         currentLocalState = fakeFolder.currentLocalState();
         QVERIFY(currentLocalState.find("readonlyDirectory_PERM_M_/cannotBeRemoved_PERM_WVN_.data"));
         QVERIFY(currentLocalState.find("readonlyDirectory_PERM_M_/subdir_PERM_CK_"));
-        // the subdirectory had delete permissions, so the contents were deleted
-        QVERIFY(!currentLocalState.find("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_"));
+        // the subdirectory had delete permissions, but, it was within the recovered directory, so must also get recovered
+        QVERIFY(currentLocalState.find("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_"));
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
 
-        // restore
-        fakeFolder.remoteModifier().mkdir("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_");
-        fakeFolder.remoteModifier().insert("readonlyDirectory_PERM_M_/subdir_PERM_CK_/subsubdir_PERM_CKDNV_/normalFile_PERM_WVND_.data");
         applyPermissionsFromName(fakeFolder.remoteModifier());
         QVERIFY(fakeFolder.syncOnce());
         QCOMPARE(fakeFolder.currentLocalState(), fakeFolder.currentRemoteState());
@@ -499,11 +496,16 @@ private slots:
         lm.rename("changeonly/sub2/filetorname2a", "changeonly/sub2/aaa2_renamed");
         lm.rename("changeonly/sub2/filetorname2z", "changeonly/sub2/zzz2_renamed");
 
+        auto expectedState = fakeFolder.currentLocalState();
+
+        QVERIFY(fakeFolder.syncOnce());
+        QCOMPARE(fakeFolder.currentLocalState(), expectedState);
+        QCOMPARE(fakeFolder.currentRemoteState(), expectedState);
+
         lm.rename("changeonly/sub1", "changeonly/aaa");
         lm.rename("changeonly/sub2", "changeonly/zzz");
 
-
-        auto expectedState = fakeFolder.currentLocalState();
+        expectedState = fakeFolder.currentLocalState();
 
         QVERIFY(fakeFolder.syncOnce());
         QCOMPARE(fakeFolder.currentLocalState(), expectedState);
