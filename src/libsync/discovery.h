@@ -193,6 +193,8 @@ private:
      */
     bool checkPermissions(const SyncFileItemPtr &item);
 
+    bool isAnyParentBeingRestored(const QString &file) const;
+
     struct MovePermissionResult
     {
         // whether moving/renaming the source is ok
