@@ -67,6 +67,8 @@ MouseArea {
             Layout.fillWidth: true
             Layout.leftMargin: 40
             Layout.bottomMargin: model.links.length > 1 ? 5 : 0
+            // this topMargin should not be here
+            Layout.topMargin: 15
 
             displayActions: model.displayActions
             objectType: model.objectType

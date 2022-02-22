@@ -683,7 +683,7 @@ QVariant ActivityListModel::convertLinkToActionButton(const OCC::Activity &activ
     auto activityLinkCopy = activityLink;
 
     const auto isReplyIconApplicable = activityLink._verb == QStringLiteral("WEB")
-        && (activity._objectType == QStringLiteral("chat") || activity._objectType == QStringLiteral("call")
+        && !(activity._objectType == QStringLiteral("chat") || activity._objectType == QStringLiteral("call")
             || activity._objectType == QStringLiteral("room"));
 
     const QString replyButtonPath = QStringLiteral("image://svgimage-custom-color/reply.svg");
@@ -696,7 +696,7 @@ QVariant ActivityListModel::convertLinkToActionButton(const OCC::Activity &activ
     }
 
     const auto isReplyLabelApplicable = activityLink._verb == QStringLiteral("WEB")
-        && (activity._objectType == QStringLiteral("chat")
+        && !(activity._objectType == QStringLiteral("chat")
         || (activity._objectType != QStringLiteral("room") && activity._objectType != QStringLiteral("call")));
 
     if (activityLink._verb == QStringLiteral("DELETE")) {

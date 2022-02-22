@@ -72,7 +72,7 @@ RowLayout {
             elide: Text.ElideRight
             font.pixelSize: Style.subLinePixelSize
             color: "#808080"
-        }
+        }    
         
         Loader {
             id: talkReplyLoader
@@ -81,9 +81,9 @@ RowLayout {
             sourceComponent: TalkReply {
                 id: talkReply
             }                           
-        }
+        }        
     }
-
+    
     Button {
         id: dismissActionButton
 
