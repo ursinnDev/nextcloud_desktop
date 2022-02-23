@@ -203,7 +203,7 @@ QPair<bool, QByteArray> DiscoveryPhase::findAndCancelDeletedJob(const QString &o
     return { result, oldEtag };
 }
 
-void DiscoveryPhase::enqueueDirectoryToDelete(const QString &path, ProcessDirectoryJob *directoryJob)
+void DiscoveryPhase::enqueueDirectoryToDelete(const QString &path, ProcessDirectoryJob* const directoryJob)
 {
     _queuedDeletedDirectories[path] = directoryJob;
 

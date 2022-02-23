@@ -251,7 +251,7 @@ class DiscoveryPhase : public QObject
      */
     QPair<bool, QByteArray> findAndCancelDeletedJob(const QString &originalPath);
 
-    void enqueueDirectoryToDelete(const QString &path, ProcessDirectoryJob *directoryJob);
+    void enqueueDirectoryToDelete(const QString &path, ProcessDirectoryJob* const directoryJob);
 
 public:
     // input
