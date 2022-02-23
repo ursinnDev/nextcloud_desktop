@@ -22,12 +22,8 @@
 
 #include "config.h"
 
-#if defined(Q_OS_MAC)
-#include "socketapisocket_mac.h"
-#else
 #include <QLocalServer>
 using SocketApiServer = QLocalServer;
-#endif
 
 class QUrl;
 class QLocalSocket;
@@ -43,6 +39,10 @@ class SocketApiJob;
 class SocketApiJobV2;
 
 Q_DECLARE_LOGGING_CATEGORY(lcSocketApi)
+
+#ifdef Q_OS_MACOS
+QString socketApiSocketPath();
+#endif
 
 /**
  * @brief The SocketApi class
